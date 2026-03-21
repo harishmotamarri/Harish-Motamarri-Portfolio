@@ -1,0 +1,22 @@
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build tools
+node_modules/
+dist/
+__pycache__/
+
+# Utility scripts
+*.py
+
+# Temp files
+*.tmp
+*.log
