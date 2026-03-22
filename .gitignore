@@ -20,3 +20,5 @@ __pycache__/
 # Temp files
 *.tmp
 *.log
+
+.vercel

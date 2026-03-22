@@ -95,6 +95,39 @@
     if (heroVoiceButton) {
       const speechSupported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
       const welcomeMessage = "Hello, I'm Harish Motamarri. Welcome to my portfolio. I'm a full stack developer focused on building practical products at the intersection of AI, IoT, and modern web. Thank you for visiting.";
+      const strongMaleVoiceHints = [
+        /google uk english male/i,
+        /microsoft (?:david|guy|mark|ryan|ravi|james|andrew|connor|eric|christopher)/i,
+        /\bmale\b/i,
+        /\bravi\b/i,
+        /\bdavid\b/i,
+        /\bdaniel\b/i,
+        /\balex\b/i,
+        /\barthur\b/i,
+        /\bfred\b/i,
+        /\bguy\b/i,
+        /\blee\b/i,
+        /\boliver\b/i,
+        /\bthomas\b/i,
+        /\bmatt(?:hew)?\b/i,
+        /\bmichael\b/i,
+        /\bjames\b/i,
+        /\bjohn\b/i,
+        /\bgeorge\b/i,
+        /\bryan\b/i
+      ];
+      const femaleVoiceHints = [
+        /\bfemale\b/i,
+        /\bheera\b/i,
+        /\bhazel\b/i,
+        /\bzira\b/i,
+        /\bsusan\b/i,
+        /\bsamantha\b/i,
+        /\bvictoria\b/i,
+        /\bkaren\b/i,
+        /\bserena\b/i,
+        /\bmoira\b/i
+      ];
 
       const setHeroVoiceState = (isSpeaking) => {
         heroVoiceButton.classList.toggle('is-speaking', isSpeaking);
@@ -102,12 +135,67 @@
         heroVoiceButton.setAttribute('title', isSpeaking ? 'Stop welcome message' : 'Play welcome message');
       };
 
-      const getPreferredVoice = () => {
-        const voices = window.speechSynthesis.getVoices();
+      let availableEnglishVoices = [];
 
-        return voices.find(voice => /^en-IN$/i.test(voice.lang))
-          || voices.find(voice => /^en-(GB|US)$/i.test(voice.lang))
-          || voices.find(voice => /^en/i.test(voice.lang))
+      const updateAvailableVoices = () => {
+        availableEnglishVoices = window.speechSynthesis
+          .getVoices()
+          .filter((voice) => /^en/i.test(voice.lang));
+
+        return availableEnglishVoices;
+      };
+
+      const waitForVoices = (timeoutMs = 1500) => new Promise((resolve) => {
+        const initialVoices = updateAvailableVoices();
+
+        if (initialVoices.length) {
+          resolve(initialVoices);
+          return;
+        }
+
+        let settled = false;
+        let timeoutId = null;
+
+        const finish = () => {
+          if (settled) return;
+          settled = true;
+          if (timeoutId) window.clearTimeout(timeoutId);
+          window.speechSynthesis.removeEventListener('voiceschanged', handleVoicesChanged);
+          resolve(updateAvailableVoices());
+        };
+
+        const handleVoicesChanged = () => {
+          if (updateAvailableVoices().length) finish();
+        };
+
+        timeoutId = window.setTimeout(finish, timeoutMs);
+        window.speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);
+        window.speechSynthesis.getVoices();
+      });
+
+      const getPreferredVoice = async () => {
+        const voices = availableEnglishVoices.length
+          ? availableEnglishVoices
+          : await waitForVoices();
+
+        const scoreVoice = (voice) => {
+          let score = 0;
+          const voiceLabel = `${voice.name} ${voice.lang}`;
+
+          if (/^en-IN$/i.test(voice.lang)) score += 30;
+          else if (/^en-(GB|US)$/i.test(voice.lang)) score += 20;
+          else if (/^en/i.test(voice.lang)) score += 10;
+
+          if (strongMaleVoiceHints.some((pattern) => pattern.test(voiceLabel))) score += 60;
+          if (femaleVoiceHints.some((pattern) => pattern.test(voiceLabel))) score -= 40;
+          if (voice.localService) score += 5;
+          if (voice.default) score += 2;
+
+          return score;
+        };
+
+        return voices
+          .sort((left, right) => scoreVoice(right) - scoreVoice(left))[0]
           || null;
       };
 
@@ -116,7 +204,10 @@
         heroVoiceButton.setAttribute('aria-disabled', 'true');
         heroVoiceButton.setAttribute('title', 'Speech playback is not supported in this browser');
       } else {
-        heroVoiceButton.addEventListener('click', () => {
+        updateAvailableVoices();
+        window.speechSynthesis.addEventListener('voiceschanged', updateAvailableVoices);
+
+        heroVoiceButton.addEventListener('click', async () => {
           if (window.speechSynthesis.speaking) {
             window.speechSynthesis.cancel();
             setHeroVoiceState(false);
@@ -124,12 +215,17 @@
           }
 
           const utterance = new SpeechSynthesisUtterance(welcomeMessage);
-          const preferredVoice = getPreferredVoice();
+          const preferredVoice = await getPreferredVoice();
 
-          if (preferredVoice) utterance.voice = preferredVoice;
+          if (preferredVoice) {
+            utterance.voice = preferredVoice;
+            utterance.lang = preferredVoice.lang;
+          } else {
+            utterance.lang = 'en-IN';
+          }
 
           utterance.rate = 0.97;
-          utterance.pitch = 1;
+          utterance.pitch = 0.88;
           utterance.volume = 1;
           utterance.onend = () => setHeroVoiceState(false);
           utterance.onerror = () => setHeroVoiceState(false);
