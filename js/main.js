@@ -262,6 +262,26 @@
     const barSection = document.querySelector('.skill-bars');
     if (barSection) barObs.observe(barSection);
 
+    /* ---- Project Action Placement ---- */
+    document.querySelectorAll('.proj-card').forEach((card) => {
+      const meta = card.querySelector('.proj-meta');
+      const detailLinks = card.querySelector('.proj-detail .proj-links');
+
+      if (!meta || !detailLinks) return;
+
+      meta.appendChild(detailLinks);
+
+      detailLinks.addEventListener('click', (event) => {
+        event.stopPropagation();
+      });
+
+      detailLinks.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          event.stopPropagation();
+        });
+      });
+    });
+
     /* ---- Project Accordion ---- */
     document.querySelectorAll('.proj-summary').forEach(summary => {
       summary.addEventListener('click', () => {
