@@ -2253,6 +2253,25 @@
       content: 'Hide Description';
     }
 
+    .proj-private-note {
+      width: 100%;
+      padding: 8px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .proj-card[data-private="true"] .proj-summary {
+      cursor: default;
+    }
+
     .proj-detail {
       max-height: 0;
       overflow: hidden;
@@ -3407,6 +3426,12 @@
 
     [data-theme="light"] .tag.highlight {
       background: rgba(68, 111, 22, 0.08);
+    }
+
+    [data-theme="light"] .proj-private-note {
+      background: rgba(68, 111, 22, 0.08);
+      border-color: rgba(68, 111, 22, 0.22);
+      color: var(--accent2);
     }
 
     [data-theme="light"] .proj-img {

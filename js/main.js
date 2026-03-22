@@ -284,8 +284,13 @@
 
     /* ---- Project Accordion ---- */
     document.querySelectorAll('.proj-summary').forEach(summary => {
+      const card = summary.closest('.proj-card');
+      const detail = card ? card.querySelector('.proj-detail') : null;
+      const isPrivate = card?.dataset.private === 'true';
+
+      if (!card || !detail || isPrivate) return;
+
       summary.addEventListener('click', () => {
-        const card = summary.closest('.proj-card');
         const isOpen = card.classList.contains('open');
         document.querySelectorAll('.proj-card').forEach(c => c.classList.remove('open'));
         if (!isOpen) card.classList.add('open');
