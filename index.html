@@ -75,6 +75,7 @@
     </ul>
     <div class="nav-actions">
       <button aria-label="Toggle theme" id="theme-toggle" title="Toggle light/dark mode">🌙</button>
+      <button aria-pressed="false" aria-label="Toggle scroll sound" id="sound-toggle" title="Toggle scroll sound">🔊</button>
       <a class="nav-resume"
         href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=motamarriharish@gmail.com&amp;su=Let%27s%20Connect&amp;body=Hi%20Harish%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20connect%20regarding%20a%20potential%20opportunity.%0A%0AI%20would%20be%20glad%20to%20continue%20the%20conversation.%0A%0ABest%20regards%2C%0A%5BYour%20Name%5D"
         target="_blank" rel="noopener">Let's Connect</a>
@@ -159,8 +160,8 @@
               <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
                 <path d="M5 14.5H8.8L13.5 18V6L8.8 9.5H5V14.5Z" stroke="currentColor" stroke-linejoin="round"
                   stroke-width="1.8"></path>
-                <path d="M16.2 9.2C17.15 9.95 17.75 11.1 17.75 12.4C17.75 13.7 17.15 14.85 16.2 15.6" stroke="currentColor"
-                  stroke-linecap="round" stroke-width="1.8"></path>
+                <path d="M16.2 9.2C17.15 9.95 17.75 11.1 17.75 12.4C17.75 13.7 17.15 14.85 16.2 15.6"
+                  stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
                 <path d="M18.55 7.15C20 8.5 20.9 10.35 20.9 12.4C20.9 14.45 20 16.3 18.55 17.65" stroke="currentColor"
                   stroke-linecap="round" stroke-width="1.8"></path>
               </svg>
@@ -218,7 +219,7 @@
           <div class="about-story">
             <p>I didn't start coding because it was trendy. I started because I was <strong>frustrated</strong> —
               Everything i see has a fault or a problem. I wanted to fix that.</p>
-            <p>I'm a <strong>2nd-year B.Tech CSE student</strong>building real products — not tutorial
+            <p>I'm a <strong>2nd-year B.Tech CSE student</strong> building real products — not tutorial
               projects. Every line I write is tied to a real problem. I care about <em>the last mile</em>: making sure
               what I build actually works for the people using it.</p>
             <div class="quote-block">"The best engineers aren't the ones who know the most syntax — they're the ones who
@@ -557,12 +558,107 @@
             </div>
           </div>
         </div>
-        <!-- PROJECT 3: Smart CMR -->
+        <!-- PROJECT 3: Spark Network -->
         <div class="proj-card" data-proj="2">
+          <div class="proj-summary">
+            <img alt="Project Image" class="proj-img" src="assets/images/sparknetwork.png" />
+            <div>
+              <div class="proj-num">Project 03</div>
+              <div class="proj-title">Spark Network — AI-Powered Smart Networking Platform</div>
+              <div class="proj-oneliner">An intelligent WhatsApp-based networking platform that connects like-minded
+                professionals, students, mentors, and collaborators using automated matchmaking based on skills,
+                interests, goals, and professional background.</div>
+              <div class="proj-tags" style="margin-top: 10px;">
+                <span class="tag highlight">AI + Chatbot</span>
+                <span class="tag">Full Stack</span>
+                <span class="tag">WhatsApp API</span>
+                <span class="tag">Node.js / Prisma DB</span>
+                <span class="tag">Matching Engine</span>
+              </div>
+            </div>
+            <div class="proj-meta">
+              <div aria-label="Expand project details" class="proj-toggle"></div>
+            </div>
+          </div>
+          <div class="proj-detail">
+            <div class="proj-detail-inner">
+              <div>
+                <div class="case-block" style="margin-bottom: 1.5rem;">
+                  <h4>🔍 The Problem</h4>
+                  <p>Traditional networking relies on manual effort — attending events, cold messaging, and hoping to
+                    find the right connections. Students, professionals, and entrepreneurs lack a smart, accessible
+                    system that automatically surfaces relevant people based on shared goals, complementary skills, and
+                    career intent.</p>
+                </div>
+                <div class="case-block" style="margin-bottom: 1.5rem;">
+                  <h4>💡 The Solution</h4>
+                  <p>Spark Network is an AI-powered WhatsApp networking platform that automates profile collection,
+                    analyzes user compatibility, and creates meaningful introductions. Users onboard through a WhatsApp
+                    chatbot, build their profile conversationally, and receive curated connection recommendations based
+                    on shared interests, complementary skills, career goals, and networking intent — enabling mentors,
+                    collaborators, and professionals to connect in real time.</p>
+                </div>
+                <div class="case-block" style="margin-bottom: 1.5rem;">
+                  <h4>🏗 System Workflow</h4>
+                  <ul>
+                    <li>User messages the WhatsApp Bot → Webhook triggers backend</li>
+                    <li>Conversational onboarding collects name, skills, goals, and interests</li>
+                    <li>Backend stores profile securely in MongoDB</li>
+                    <li>Matching Engine analyzes compatibility across all profiles</li>
+                    <li>Personalized recommendations sent back through the bot</li>
+                    <li>Bot facilitates introductions and networking group discovery</li>
+                    <li>Users can update profiles and request new matches anytime</li>
+                  </ul>
+                </div>
+              </div>
+              <div>
+                <div class="case-block" style="margin-bottom: 1.5rem;">
+                  <h4>⚙️ Tech Stack</h4>
+                  <div class="stack-wrap">
+                    <span class="pill">WhatsApp Cloud API</span>
+                    <span class="pill">Node.js</span>
+                    <span class="pill">Express.js</span>
+                    <span class="pill">PrismaDB</span>
+                    <span class="pill">Webhooks</span>
+                    <span class="pill">REST API</span>
+                    <span class="pill">Matching Engine</span>
+                    <span class="pill">Automation</span>
+                    <span class="pill">Chatbot</span>
+                  </div>
+                </div>
+                <div class="case-block" style="margin-bottom: 1.5rem;">
+                  <h4>🧠 Matching Intelligence</h4>
+                  <ul>
+                    <li>Shared Interests &amp; Complementary Skills Matching</li>
+                    <li>Career Goal Alignment &amp; Industry Relevance Analysis</li>
+                    <li>Networking Intent Matching (Job, Collab, Mentorship)</li>
+                    <li>Mentor / Learner Pairing &amp; Collaboration Discovery</li>
+                  </ul>
+                </div>
+                <div class="case-block">
+                  <h4>🌍 Societal Impact</h4>
+                  <ul>
+                    <li>Helps students find collaborators for projects</li>
+                    <li>Helps startups discover talent and co-founders</li>
+                    <li>Connects mentors with learners at scale</li>
+                    <li>Builds stronger, smarter professional communities</li>
+                  </ul>
+                </div>
+                <div class="proj-links">
+                  <a class="proj-link primary" href="https://github.com/harishmotamarri/match-network" rel="noopener"
+                    target="_blank">GitHub →</a>
+                  <a class="proj-link" href="https://wa.me/917658909216" rel="noopener" target="_blank">Live Demo →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- PROJECT 4: Smart CMR -->
+        <div class="proj-card" data-proj="3">
           <div class="proj-summary">
             <img alt="Project Image" class="proj-img" src="assets/images/smartcmr.png" />
             <div>
-              <div class="proj-num">Project 03</div>
+              <div class="proj-num">Project 04</div>
               <div class="proj-title">Smart CMR — Smart Campus Management &amp; Resource System</div>
               <div class="proj-oneliner">A smart campus management system for managing classrooms, events, resources,
                 and student activities with a centralized dashboard.</div>
@@ -645,12 +741,12 @@
             </div>
           </div>
         </div>
-        <!-- PROJECT 4: Sentinel Shield -->
-        <div class="proj-card" data-proj="3">
+        <!-- PROJECT 5: Sentinel Shield -->
+        <div class="proj-card" data-proj="4">
           <div class="proj-summary">
             <img alt="Project Image" class="proj-img" src="assets/images/SentinelSheild.png" />
             <div>
-              <div class="proj-num">Project 04</div>
+              <div class="proj-num">Project 05</div>
               <div class="proj-title">Sentinel Shield — File &amp; Malware Detection System</div>
               <div class="proj-oneliner">A security system that scans uploaded files, detects malicious content, and
                 prevents unsafe files from entering the system.</div>
@@ -735,12 +831,103 @@
             </div>
           </div>
         </div>
-        <!-- PROJECT 5: BlackBox -->
-        <div class="proj-card" data-proj="4" data-private="true">
+        <!-- PROJECT 6: Subscribely -->
+        <div class="proj-card" data-proj="5">
+          <div class="proj-summary">
+            <img alt="Project Image" class="proj-img" src="assets/images/subscribely.png" />
+            <div>
+              <div class="proj-num">Project 06</div>
+              <div class="proj-title">Subscribely — Full Stack SaaS Subscription Platform</div>
+              <div class="proj-oneliner">A modern full stack subscription management platform enabling secure
+                authentication, dynamic subscription plans, enrollment, and personalized dashboard tracking through a
+                scalable REST API architecture.</div>
+              <div class="proj-tags" style="margin-top: 10px;">
+                <span class="tag highlight">Full Stack SaaS</span>
+                <span class="tag">React / TypeScript</span>
+                <span class="tag">Django REST</span>
+                <span class="tag">REST API</span>
+                <span class="tag">SQLite</span>
+              </div>
+            </div>
+            <div class="proj-meta">
+              <div aria-label="Expand project details" class="proj-toggle"></div>
+            </div>
+          </div>
+          <div class="proj-detail">
+            <div class="proj-detail-inner">
+              <div>
+                <div class="case-block" style="margin-bottom: 1.5rem;">
+                  <h4>🔍 The Problem</h4>
+                  <p>Managing subscriptions across a growing user base is complex — users need a seamless way to browse
+                    plans, subscribe, and monitor their active subscriptions, while administrators require centralized
+                    control to manage plans, users, and platform activity without technical overhead.</p>
+                </div>
+                <div class="case-block" style="margin-bottom: 1.5rem;">
+                  <h4>💡 The Solution</h4>
+                  <p>Subscribe.ly is a full stack SaaS-based subscription management application built using React,
+                    Vite, TypeScript, Django, and Django REST Framework. Users can register securely, browse
+                    subscription plans, subscribe, and monitor active subscriptions through a personalized dashboard.
+                    Administrators manage plans and monitor activity through a centralized admin panel.</p>
+                </div>
+                <div class="case-block" style="margin-bottom: 1.5rem;">
+                  <h4>🏗 Architecture</h4>
+                  <ul>
+                    <li>Users register and authenticate securely via JWT-based auth</li>
+                    <li>Browse and enroll in dynamically managed subscription plans</li>
+                    <li>Personalized dashboard tracks active subscriptions and lifecycle</li>
+                    <li>Admin panel for plan creation, user management, and monitoring</li>
+                    <li>Modular REST API backend designed for scalability</li>
+                    <li>Architected for future payment gateway and automation integration</li>
+                  </ul>
+                </div>
+              </div>
+              <div>
+                <div class="case-block" style="margin-bottom: 1.5rem;">
+                  <h4>⚙️ Tech Stack</h4>
+                  <div class="stack-wrap">
+                    <span class="pill">React</span>
+                    <span class="pill">TypeScript</span>
+                    <span class="pill">Vite</span>
+                    <span class="pill">Django</span>
+                    <span class="pill">Django REST Framework</span>
+                    <span class="pill">SQLite</span>
+                    <span class="pill">REST API</span>
+                  </div>
+                </div>
+                <div class="case-block" style="margin-bottom: 1.5rem;">
+                  <h4>🧗 Key Highlights</h4>
+                  <ul>
+                    <li>Secure Authentication — JWT-based user login and registration</li>
+                    <li>Dynamic Subscription Plans — Admin-managed plan creation</li>
+                    <li>Personalized Dashboard — Per-user subscription tracking</li>
+                    <li>Admin Management Panel — Full platform oversight</li>
+                    <li>Subscription Lifecycle Tracking — Enrollment to expiry</li>
+                    <li>Scalable SaaS Architecture — Built for growth</li>
+                  </ul>
+                </div>
+                <div class="case-block">
+                  <h4>📦 Modules</h4>
+                  <ul>
+                    <li>Users Module · Plans Module · Subscription Module</li>
+                    <li>Dashboard Module · Admin Controls</li>
+                  </ul>
+                </div>
+                <div class="proj-links">
+                  <a class="proj-link primary" href="https://github.com/harishmotamarri/Subscribely" rel="noopener"
+                    target="_blank">GitHub →</a>
+                  <a class="proj-link" href="https://subscribely-41sf6v04r-harishs-projects-40940d50.vercel.app"
+                    rel="noopener" target="_blank">Live Demo →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- PROJECT 7: BlackBox -->
+        <div class="proj-card" data-proj="6" data-private="true">
           <div class="proj-summary">
             <img alt="Project Image" class="proj-img" src="assets/images/blackbox.png" />
             <div>
-              <div class="proj-num">Project 05</div>
+              <div class="proj-num">Project 07</div>
               <div class="proj-title">BlackBox — Smart Security Packet(Role : System Integration Specialist)</div>
               <div class="proj-oneliner">Confidential startup project focused on secure IoT systems, backend
                 development, and real-world systems integration.</div>
@@ -756,12 +943,12 @@
             </div>
           </div>
         </div>
-        <!-- PROJECT 6: ExamPrep -->
-        <div class="proj-card" data-proj="5">
+        <!-- PROJECT 8: ExamPrep -->
+        <div class="proj-card" data-proj="7">
           <div class="proj-summary">
             <img alt="Project Image" class="proj-img" src="assets/images/examprep.png" />
             <div>
-              <div class="proj-num">Project 06</div>
+              <div class="proj-num">Project 08</div>
               <div class="proj-title">ExamPrep — Smart Exam Preparation &amp; Paper Prediction System</div>
               <div class="proj-oneliner">A system that analyzes previous exam papers and syllabus to generate important
                 questions, predicted papers, and study plans for students.</div>
@@ -842,14 +1029,18 @@
             </div>
           </div>
         </div>
-        <!-- PROJECT 7: The Student Spot -->
-        <div class="proj-card" data-proj="6">
+        <!-- PROJECT 9: The Student Spot -->
+        <div class="proj-card" data-proj="8">
           <div class="proj-summary">
             <img alt="Project Image" class="proj-img" src="assets/images/TSS.png" />
             <div>
-              <div class="proj-num">Project 07</div>
-              <div class="proj-title">The Student Spot — Student Community &amp; Resource Platform (Role : Full Stack Developer) </div>
-              <div class="proj-oneliner">Selected as a Full Stack Developer to build “The Student Spot”, a centralized community platform where students can share notes, opportunities, events, projects, and collaborate with other students. Currently developing the core platform including authentication, dashboard, and resource sharing system.</div>
+              <div class="proj-num">Project 09</div>
+              <div class="proj-title">The Student Spot — Student Community &amp; Resource Platform (Role : Full Stack
+                Developer) </div>
+              <div class="proj-oneliner">Selected as a Full Stack Developer to build “The Student Spot”, a centralized
+                community platform where students can share notes, opportunities, events, projects, and collaborate with
+                other students. Currently developing the core platform including authentication, dashboard, and resource
+                sharing system.</div>
               <div class="proj-tags" style="margin-top: 10px;">
                 <span class="tag highlight">Web Platform</span>
                 <span class="tag">Full Stack</span>
@@ -925,13 +1116,13 @@
             </div>
           </div>
         </div>
-        <!-- PROJECT 8: AgriVani -->
-        <div class="proj-card" data-proj="7">
+        <!-- PROJECT 10: AgriVani -->
+        <div class="proj-card" data-proj="9">
           <div class="proj-summary">
             <img alt="agrivani — ai crop disease detection &amp; farmer assistance platform" class="proj-img"
               loading="lazy" src="assets/images/Agrivani.png" />
             <div>
-              <div class="proj-num">Project 08</div>
+              <div class="proj-num">Project 10</div>
               <div class="proj-title">AgriVani — AI Crop Disease Detection &amp; Farmer Assistance Platform</div>
               <div class="proj-oneliner">An AI-powered agriculture assistance system that detects crop diseases from
                 leaf images and provides treatment and pesticide recommendations.</div>
@@ -1010,13 +1201,13 @@
             </div>
           </div>
         </div>
-        <!-- PROJECT 9: Netflix Clone -->
-        <div class="proj-card" data-proj="8">
+        <!-- PROJECT 11: Netflix Clone -->
+        <div class="proj-card" data-proj="10">
           <div class="proj-summary">
             <img alt="netflix clone — video streaming web application" class="proj-img" loading="lazy"
               src="assets/images/Netfix.png" />
             <div>
-              <div class="proj-num">Project 09</div>
+              <div class="proj-num">Project 11</div>
               <div class="proj-title">Netflix Clone — Video Streaming Web Application</div>
               <div class="proj-oneliner">A Netflix-inspired video streaming platform with authentication, movie
                 browsing, and streaming interface.</div>
@@ -1099,13 +1290,13 @@
             </div>
           </div>
         </div>
-        <!-- PROJECT 10: EcoRide -->
-        <div class="proj-card" data-proj="9">
+        <!-- PROJECT 12: EcoRide -->
+        <div class="proj-card" data-proj="11">
           <div class="proj-summary">
             <img alt="🌱 ecoride — student ride sharing platform" class="proj-img" loading="lazy"
               src="assets/images/ecoride.png" />
             <div>
-              <div class="proj-num">Project 10</div>
+              <div class="proj-num">Project 12</div>
               <div class="proj-title">🌱 EcoRide — Student Ride Sharing Platform</div>
               <div class="proj-oneliner">A secure, eco-friendly ride-sharing platform designed for students and young
                 professionals to share rides, save money, and reduce carbon emissions with verified user safety
@@ -1190,13 +1381,13 @@
             </div>
           </div>
         </div>
-        <!-- PROJECT 11: Guess The Number -->
-        <div class="proj-card" data-proj="10">
+        <!-- PROJECT 13: Guess The Number -->
+        <div class="proj-card" data-proj="12">
           <div class="proj-summary">
             <img alt="guess the number — interactive number guessing game" class="proj-img" loading="lazy"
               src="assets/images/guessthenumber.png" />
             <div>
-              <div class="proj-num">Project 11</div>
+              <div class="proj-num">Project 13</div>
               <div class="proj-title">Guess The Number — Interactive Number Guessing Game</div>
               <div class="proj-oneliner">A simple interactive number guessing game where the user tries to guess a
                 randomly generated number within limited attempts.</div>
@@ -1345,19 +1536,13 @@
                 </div>
                 <div class="report-row">
                   <span class="report-label">Semester 3</span>
-                  <span class="report-value">8.90</span>
+                  <span class="report-value">8.65</span>
                 </div>
                 <div class="report-row report-row-total">
                   <span class="report-label">Total CGPA</span>
                   <span class="report-value">9.12 / 10</span>
                 </div>
               </div>
-            </div>
-            <div class="tl-tags">
-              <span class="tl-tag">Data Structures &amp; Algorithms</span>
-              <span class="tl-tag">Operating Systems</span>
-              <span class="tl-tag">Computer Networks</span>
-              <span class="tl-tag">Database Systems</span>
             </div>
           </div>
         </div>
@@ -1378,7 +1563,8 @@
                 Each event sharpened a different skill: rapid prototyping, team communication, scope management, and
                 system design under constraints.</p>
             </div>
-            <div id="hackathon-list" class="hack-list" role="region" aria-hidden="true" aria-labelledby="hackathons-title">
+            <div id="hackathon-list" class="hack-list" role="region" aria-hidden="true"
+              aria-labelledby="hackathons-title">
               <div class="hack-entry">
                 <div class="tl-role" style="font-size: 0.95rem; margin-bottom: 0.2rem;">HackForge 48hr Hackathon</div>
                 <div class="tl-org">CMR Institute of Technology · 48 Hours</div>
@@ -1615,7 +1801,8 @@
                 <div class="cl-value">github.com/Harishmotamarri</div>
               </div>
             </a>
-            <a class="contact-link" href="https://www.linkedin.com/in/harish-motamarri-b5bab1335/" rel="noopener" target="_blank">
+            <a class="contact-link" href="https://www.linkedin.com/in/harish-motamarri-b5bab1335/" rel="noopener"
+              target="_blank">
               <span class="cl-icon">IN</span>
               <div class="cl-text">
                 <div class="cl-label">LinkedIn</div>
@@ -1626,30 +1813,30 @@
         </div>
         <div class="reveal reveal-delay-2">
           <div class="currently-box">
-            <div class="currently-header">Currently focused on</div>
+            <div class="currently-header">Ready for the Next Challenge</div>
             <div class="currently-item">
               <div class="ci-label">01</div>
-              Building production-ready full stack applications with clean architecture
+              Open to internships, freelance projects, and full-time opportunities
             </div>
             <div class="currently-item">
               <div class="ci-label">02</div>
-              Deep-diving system design: scalability, caching, and database internals
+              Got a product idea or a problem worth solving? Let's build it together
             </div>
             <div class="currently-item">
               <div class="ci-label">03</div>
-              Developing AI-integrated products with real-world deployment constraints
+              Looking to collaborate with startup teams, founders, and engineers
             </div>
             <div class="currently-item">
               <div class="ci-label">04</div>
-              Contributing to startup-velocity teams with high ownership culture
+              A quick message is all it takes — I respond fast and love great conversations
             </div>
           </div>
           <div class="resume-block" id="resume-download">
-            <p>Want the full picture? My resume covers everything in one page.</p>
+            <p>Have an opportunity, a project, or just want to say hello? I'd love to hear from you.</p>
             <a class="btn-resume"
-              href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=motamarriharish@gmail.com&amp;su=Request%20for%20Resume&amp;body=Hi%20Harish%2C%0A%0AI%20would%20like%20to%20request%20a%20copy%20of%20your%20latest%20resume.%0A%0AThanks!"
+              href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=motamarriharish@gmail.com&amp;su=Let%27s%20Connect%20%E2%80%94%20Reaching%20Out%20from%20Your%20Portfolio&amp;body=Hi%20Harish%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20love%20to%20connect.%0A%0A%5BYour%20message%20here%5D%0A%0ABest%20regards%2C%0A%5BYour%20Name%5D"
               target="_blank" rel="noopener">
-              ↓ Request Resume
+              ✉ Get in Touch
             </a>
           </div>
         </div>
@@ -1676,6 +1863,3 @@
 </body>
 
 </html>
-
-
-

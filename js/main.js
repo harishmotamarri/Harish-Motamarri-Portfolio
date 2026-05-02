@@ -60,6 +60,77 @@
       if (bt) bt.classList.toggle('back-to-top-visible', window.scrollY > 600);
     });
 
+    /* ---- Scroll Sound (lightweight, WebAudio) ---- */
+    const soundToggleBtn = document.getElementById('sound-toggle');
+    let scrollSoundEnabled = true;
+    try {
+      const pref = localStorage.getItem('scrollSound');
+      if (pref === 'off') scrollSoundEnabled = false;
+    } catch (e) { /* ignore */ }
+
+    // Respect reduced motion preference by default
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      scrollSoundEnabled = false;
+    }
+
+    if (soundToggleBtn) {
+      soundToggleBtn.addEventListener('click', () => {
+        scrollSoundEnabled = !scrollSoundEnabled;
+        try { localStorage.setItem('scrollSound', scrollSoundEnabled ? 'on' : 'off'); } catch (e) {}
+        soundToggleBtn.textContent = scrollSoundEnabled ? '🔊' : '🔇';
+        soundToggleBtn.setAttribute('aria-pressed', String(scrollSoundEnabled));
+      });
+      soundToggleBtn.textContent = scrollSoundEnabled ? '🔊' : '🔇';
+      soundToggleBtn.setAttribute('aria-pressed', String(scrollSoundEnabled));
+    }
+
+    let _audioCtx = null;
+    function ensureAudioContext() {
+      if (_audioCtx) return _audioCtx;
+      try {
+        _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      } catch (e) {
+        _audioCtx = null;
+      }
+      return _audioCtx;
+    }
+
+    function playScrollSound() {
+      if (!scrollSoundEnabled) return;
+      const ctx = ensureAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, now);
+      gain.gain.setValueAtTime(0.0001, now);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      gain.gain.exponentialRampToValueAtTime(0.12, now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+      osc.start(now);
+      osc.stop(now + 0.15);
+    }
+
+    let lastScrollSoundAt = 0;
+    let lastScrollY = 0;
+    window.addEventListener('scroll', () => {
+      const now = Date.now();
+      const dy = Math.abs(window.scrollY - lastScrollY);
+      lastScrollY = window.scrollY;
+      if (dy < 8) return; // ignore tiny jitter
+      if (now - lastScrollSoundAt > 120) {
+        // Resume audio context on first interaction if needed
+        const ctx = ensureAudioContext();
+        if (ctx && ctx.state === 'suspended') {
+          ctx.resume().catch(() => {});
+        }
+        playScrollSound();
+        lastScrollSoundAt = now;
+      }
+    }, { passive: true });
+
     /* ---- Mobile Menu ---- */
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -297,6 +368,61 @@
       });
     });
 
+    /* ---- Close project when clicking description ---- */
+    document.querySelectorAll('.proj-detail').forEach(detail => {
+      detail.addEventListener('click', (e) => {
+        // Don't close when clicking action links or buttons inside the detail
+        if (e.target.closest('.proj-links') || e.target.closest('a') || e.target.closest('button')) return;
+        const card = detail.closest('.proj-card');
+        if (card) card.classList.remove('open');
+      });
+    });
+
+    /* ---- Hackathon certificates: open inline modal instead of new tab ---- */
+    // Create modal markup once
+    (function createCertModal() {
+      if (document.getElementById('cert-backdrop')) return;
+      const bd = document.createElement('div');
+      bd.id = 'cert-backdrop';
+      bd.className = 'cert-backdrop';
+      bd.innerHTML = `
+        <div class="cert-panel" role="dialog" aria-modal="true" aria-labelledby="cert-title">
+          <button class="cert-close" aria-label="Close certificate">✕</button>
+          <div class="cert-body"><img alt="Certificate" id="cert-img" src="" /></div>
+        </div>
+      `;
+      document.body.appendChild(bd);
+
+      const closeBtn = bd.querySelector('.cert-close');
+      const img = bd.querySelector('#cert-img');
+
+      function close() {
+        bd.classList.remove('open');
+        bd.setAttribute('aria-hidden', 'true');
+        img.src = '';
+      }
+
+      closeBtn.addEventListener('click', (e) => { e.stopPropagation(); close(); });
+      bd.addEventListener('click', (e) => {
+        if (e.target === bd) close();
+      });
+      window.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    })();
+
+    // Intercept hackathon certificate links
+    document.querySelectorAll('#hackathon-list .proj-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const href = link.getAttribute('href');
+        if (!href) return;
+        const bd = document.getElementById('cert-backdrop');
+        const img = bd.querySelector('#cert-img');
+        img.src = href;
+        bd.classList.add('open');
+        bd.setAttribute('aria-hidden', 'false');
+      });
+    });
+
     /* ---- Hackathons Toggle ---- */
     document.querySelectorAll('.hack-summary').forEach(summary => {
       const hackContainer = summary.closest('.tl-body');
@@ -304,10 +430,60 @@
 
       if (!hackList) return;
 
+      // Smooth open/close using measured heights and per-entry stagger
       const syncHackSummaryState = (isExpanded) => {
         summary.setAttribute('aria-expanded', String(isExpanded));
-        hackList.classList.toggle('open', isExpanded);
-        hackList.setAttribute('aria-hidden', String(!isExpanded));
+
+        const entries = Array.from(hackList.querySelectorAll('.hack-entry'));
+
+        const clearEntryDelays = () => entries.forEach(el => { el.style.transitionDelay = ''; });
+
+        if (isExpanded) {
+          hackList.classList.add('open');
+          hackList.setAttribute('aria-hidden', 'false');
+
+          // Set explicit max-height to enable smooth height animation
+          const full = hackList.scrollHeight;
+          hackList.style.maxHeight = full + 'px';
+
+          // Stagger entries
+          entries.forEach((el, i) => {
+            el.style.transitionDelay = `${i * 45}ms`;
+          });
+
+          // Remove inline max-height after transition so layout remains flexible
+          const onOpenEnd = (ev) => {
+            if (ev.target !== hackList) return;
+            hackList.style.maxHeight = '';
+            clearEntryDelays();
+            hackList.removeEventListener('transitionend', onOpenEnd);
+          };
+          hackList.addEventListener('transitionend', onOpenEnd);
+        } else {
+          // Collapse: set current height then animate to 0
+          const cur = hackList.scrollHeight;
+          hackList.style.maxHeight = cur + 'px';
+
+          // Reverse stagger for nicer exit
+          const total = entries.length;
+          entries.forEach((el, i) => {
+            el.style.transitionDelay = `${(total - i) * 30}ms`;
+          });
+
+          // Force a frame then collapse
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            hackList.style.maxHeight = '0px';
+            hackList.setAttribute('aria-hidden', 'true');
+          }));
+
+          const onCloseEnd = (ev) => {
+            if (ev.target !== hackList) return;
+            hackList.classList.remove('open');
+            clearEntryDelays();
+            hackList.removeEventListener('transitionend', onCloseEnd);
+          };
+          hackList.addEventListener('transitionend', onCloseEnd);
+        }
       };
 
       const toggleHackSummary = () => {
@@ -328,6 +504,23 @@
         }
       });
     });
+
+    /* ---- Close hackathon list when clicking description ---- */
+    (function closeHackOnDescriptionClick() {
+      const hackSummaryEl = document.getElementById('hackathons-summary');
+      const hackListEl = document.getElementById('hackathon-list');
+      if (!hackSummaryEl || !hackListEl) return;
+
+      hackListEl.addEventListener('click', (e) => {
+        // Ignore clicks on links or buttons (e.g., Show Certificate)
+        if (e.target.closest('a') || e.target.closest('button')) return;
+
+        if (hackListEl.classList.contains('open')) {
+          hackListEl.classList.remove('open');
+          hackSummaryEl.setAttribute('aria-expanded', 'false');
+        }
+      });
+    })();
 
     /* ---- Typewriter ---- */
     const phrases = [

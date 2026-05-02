@@ -15,8 +15,8 @@
       --border: rgba(255, 255, 255, 0.07);
       --border2: rgba(255, 255, 255, 0.14);
       --text: #ededed;
-      --muted: #7a7a7a;
-      --muted2: #444;
+      --muted: #9a9a9a;
+      --muted2: #9a9a9a;
       --accent: #b8ff3c;
       --accent2: #95d600;
       --accent3: rgba(184, 255, 60, 0.1);
@@ -626,6 +626,31 @@
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(184, 255, 60, 0.25);
       border-color: var(--accent);
+    }
+
+    /* Sound toggle in nav */
+    #sound-toggle {
+      width: 36px;
+      height: 36px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 9px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      font-size: 1rem;
+      padding: 0;
+      cursor: none;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    #sound-toggle:hover { transform: scale(1.08); }
+
+    #sound-toggle[aria-pressed="true"] {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.28);
     }
 
     .nav-hamburger {
@@ -2642,6 +2667,21 @@
       margin-top: 1.5rem;
       opacity: 1;
     }
+
+    /* Smooth per-entry animation for open/close */
+    .hack-list .hack-entry {
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: transform 0.32s cubic-bezier(0.22,1,0.36,1), opacity 0.28s ease;
+      will-change: transform, opacity;
+      pointer-events: none;
+    }
+
+    .hack-list.open .hack-entry {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
     
     .hack-entry {
       border-left: 2px solid var(--border2);
@@ -2778,10 +2818,88 @@
       border-radius: 12px;
       background: rgba(255, 255, 255, 0.015);
       overflow: hidden;
+      /* smooth open/close */
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: max-height 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease, margin-top 0.25s ease, transform 0.28s ease;
     }
 
     .report-panel.open {
       margin-top: 0.9rem;
+      max-height: 420px; /* large enough to show content */
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Certificate modal (hackathon) */
+    .cert-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1200;
+      padding: 1.25rem;
+    }
+
+    .cert-backdrop.open {
+      display: flex;
+    }
+
+    .cert-panel {
+      width: min(100%, 880px);
+      max-width: 92vw;
+      max-height: 80vh;
+      background: var(--bg0);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transform: translateY(-6px);
+      opacity: 0;
+      transition: transform 0.28s ease, opacity 0.22s ease;
+    }
+
+    .cert-backdrop.open .cert-panel {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .cert-close {
+      position: absolute;
+      right: 12px;
+      top: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: inline-grid;
+      place-items: center;
+      background: rgba(0,0,0,0.35);
+      color: var(--text);
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.04);
+      z-index: 2;
+    }
+
+    .cert-body {
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .cert-body img {
+      max-width: 100%;
+      max-height: 74vh;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
     }
 
     .report-row {
