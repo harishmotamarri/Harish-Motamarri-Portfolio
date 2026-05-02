@@ -392,6 +392,38 @@
       });
     });
 
+    function openProjectCard(card) {
+      const detail = card.querySelector('.proj-detail');
+      if (!detail) return;
+
+      card.classList.add('open');
+      detail.style.height = '0px';
+      detail.offsetHeight;
+      detail.style.height = `${detail.scrollHeight}px`;
+    }
+
+    function closeProjectCard(card) {
+      const detail = card.querySelector('.proj-detail');
+      if (!detail) return;
+
+      detail.style.height = `${detail.scrollHeight}px`;
+      detail.offsetHeight;
+      card.classList.remove('open');
+      detail.style.height = '0px';
+    }
+
+    document.querySelectorAll('.proj-detail').forEach((detail) => {
+      const card = detail.closest('.proj-card');
+      if (!card) return;
+
+      detail.addEventListener('transitionend', (event) => {
+        if (event.propertyName !== 'height') return;
+        if (card.classList.contains('open')) {
+          detail.style.height = 'auto';
+        }
+      });
+    });
+
     /* ---- Project Accordion ---- */
     document.querySelectorAll('.proj-summary').forEach(summary => {
       const card = summary.closest('.proj-card');
@@ -402,8 +434,8 @@
 
       summary.addEventListener('click', () => {
         const isOpen = card.classList.contains('open');
-        document.querySelectorAll('.proj-card').forEach(c => c.classList.remove('open'));
-        if (!isOpen) card.classList.add('open');
+        document.querySelectorAll('.proj-card.open').forEach(closeProjectCard);
+        if (!isOpen) openProjectCard(card);
       });
     });
 
@@ -413,7 +445,7 @@
         // Don't close when clicking action links or buttons inside the detail
         if (e.target.closest('.proj-links') || e.target.closest('a') || e.target.closest('button')) return;
         const card = detail.closest('.proj-card');
-        if (card) card.classList.remove('open');
+        if (card) closeProjectCard(card);
       });
     });
 
@@ -548,6 +580,47 @@
         if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
       });
     });
+
+    /* ---- Contact Form: mailto with user inputs ---- */
+    const contactMailForm = document.getElementById('contact-mail-form');
+    if (contactMailForm) {
+      contactMailForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const nameField = document.getElementById('contact-name');
+        const aboutField = document.getElementById('contact-about');
+        const senderName = nameField ? nameField.value.trim() : '';
+        const aboutMessage = aboutField ? aboutField.value.trim() : '';
+        const displayName = senderName || 'Portfolio Visitor';
+
+        const mailSubject = 'Collaboration Opportunity from Portfolio';
+        const mailBody = [
+          'Hi Harish,',
+          '',
+          'I came across your portfolio and would love to connect regarding a potential collaboration.',
+          '',
+          `Name: ${displayName}`,
+          '',
+          'Message:',
+          aboutMessage || '[Your message]',
+          '',
+          'Looking forward to hearing from you.',
+          '',
+          'Best regards,',
+          displayName
+        ].join('\n');
+
+        const encodedSubject = encodeURIComponent(mailSubject);
+        const encodedBody = encodeURIComponent(mailBody);
+        const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=motamarriharish@gmail.com&su=${encodedSubject}&body=${encodedBody}`;
+        const mailtoUrl = `mailto:motamarriharish@gmail.com?subject=${encodedSubject}&body=${encodedBody}`;
+
+        const openedWindow = window.open(gmailComposeUrl, '_blank', 'noopener');
+        if (!openedWindow) {
+          window.location.href = mailtoUrl;
+        }
+      });
+    }
 
     /* ---- Theme Toggle ---- */
     const themeBtn = document.getElementById('theme-toggle');
