@@ -63,20 +63,28 @@
     /* ---- Scroll Sound (lightweight, WebAudio) ---- */
     const soundToggleBtn = document.getElementById('sound-toggle');
     let scrollSoundEnabled = true;
+    let clickSoundEnabled = true;
     try {
       const pref = localStorage.getItem('scrollSound');
       if (pref === 'off') scrollSoundEnabled = false;
+      const clickPref = localStorage.getItem('clickSound');
+      if (clickPref === 'off') clickSoundEnabled = false;
     } catch (e) { /* ignore */ }
 
     // Respect reduced motion preference by default
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       scrollSoundEnabled = false;
+      clickSoundEnabled = false;
     }
 
     if (soundToggleBtn) {
       soundToggleBtn.addEventListener('click', () => {
         scrollSoundEnabled = !scrollSoundEnabled;
-        try { localStorage.setItem('scrollSound', scrollSoundEnabled ? 'on' : 'off'); } catch (e) {}
+        clickSoundEnabled = !clickSoundEnabled;
+        try { 
+          localStorage.setItem('scrollSound', scrollSoundEnabled ? 'on' : 'off');
+          localStorage.setItem('clickSound', clickSoundEnabled ? 'on' : 'off');
+        } catch (e) {}
         soundToggleBtn.textContent = scrollSoundEnabled ? '🔊' : '🔇';
         soundToggleBtn.setAttribute('aria-pressed', String(scrollSoundEnabled));
       });
@@ -113,6 +121,25 @@
       osc.stop(now + 0.15);
     }
 
+    function playClickSound() {
+      if (!clickSoundEnabled) return;
+      const ctx = ensureAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(1200, now);
+      osc.frequency.exponentialRampToValueAtTime(600, now + 0.08);
+      gain.gain.setValueAtTime(0.0001, now);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      gain.gain.exponentialRampToValueAtTime(0.15, now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+      osc.start(now);
+      osc.stop(now + 0.12);
+    }
+
     let lastScrollSoundAt = 0;
     let lastScrollY = 0;
     window.addEventListener('scroll', () => {
@@ -130,6 +157,18 @@
         lastScrollSoundAt = now;
       }
     }, { passive: true });
+
+    // Attach click sound to interactive elements
+    document.addEventListener('click', (e) => {
+      const target = e.target.closest('a, button, .proj-card, .skill-cat, .hero-stat, .profile-card, .info-block, .hack-summary, .btn-primary, .btn-outline, [role="button"]');
+      if (target) {
+        const ctx = ensureAudioContext();
+        if (ctx && ctx.state === 'suspended') {
+          ctx.resume().catch(() => {});
+        }
+        playClickSound();
+      }
+    }, true);
 
     /* ---- Mobile Menu ---- */
     const hamburger = document.getElementById('hamburger');
@@ -430,68 +469,25 @@
 
       if (!hackList) return;
 
-      // Smooth open/close using measured heights and per-entry stagger
+      // Fast open/close toggle - let CSS animations handle everything
       const syncHackSummaryState = (isExpanded) => {
         summary.setAttribute('aria-expanded', String(isExpanded));
-
-        const entries = Array.from(hackList.querySelectorAll('.hack-entry'));
-
-        const clearEntryDelays = () => entries.forEach(el => { el.style.transitionDelay = ''; });
 
         if (isExpanded) {
           hackList.classList.add('open');
           hackList.setAttribute('aria-hidden', 'false');
-
-          // Set explicit max-height to enable smooth height animation
-          const full = hackList.scrollHeight;
-          hackList.style.maxHeight = full + 'px';
-
-          // Stagger entries
-          entries.forEach((el, i) => {
-            el.style.transitionDelay = `${i * 45}ms`;
-          });
-
-          // Remove inline max-height after transition so layout remains flexible
-          const onOpenEnd = (ev) => {
-            if (ev.target !== hackList) return;
-            hackList.style.maxHeight = '';
-            clearEntryDelays();
-            hackList.removeEventListener('transitionend', onOpenEnd);
-          };
-          hackList.addEventListener('transitionend', onOpenEnd);
         } else {
-          // Collapse: set current height then animate to 0
-          const cur = hackList.scrollHeight;
-          hackList.style.maxHeight = cur + 'px';
-
-          // Reverse stagger for nicer exit
-          const total = entries.length;
-          entries.forEach((el, i) => {
-            el.style.transitionDelay = `${(total - i) * 30}ms`;
-          });
-
-          // Force a frame then collapse
-          requestAnimationFrame(() => requestAnimationFrame(() => {
-            hackList.style.maxHeight = '0px';
-            hackList.setAttribute('aria-hidden', 'true');
-          }));
-
-          const onCloseEnd = (ev) => {
-            if (ev.target !== hackList) return;
-            hackList.classList.remove('open');
-            clearEntryDelays();
-            hackList.removeEventListener('transitionend', onCloseEnd);
-          };
-          hackList.addEventListener('transitionend', onCloseEnd);
+          hackList.classList.remove('open');
+          hackList.setAttribute('aria-hidden', 'true');
         }
       };
+
+      syncHackSummaryState(hackList.classList.contains('open'));
 
       const toggleHackSummary = () => {
         const isExpanded = summary.getAttribute('aria-expanded') === 'true';
         syncHackSummaryState(!isExpanded);
       };
-
-      syncHackSummaryState(hackList.classList.contains('open'));
 
       summary.addEventListener('click', () => {
         toggleHackSummary();
