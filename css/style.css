@@ -1,4 +1,4 @@
-    /* ===== RESET & ROOT ===== */
+/* ===== RESET & ROOT ===== */
     *,
     *::before,
     *::after {
@@ -1910,7 +1910,7 @@
       right: 0;
       height: 4px;
       background: linear-gradient(90deg, var(--accent), transparent);
-      opacity: 0.5;
+      opacity: 0;
     }
 
     .profile-avatar {
@@ -4394,185 +4394,12 @@
       }
 
       .resume-block {
-        padding: 1.4rem;
-      }
-
-      .contact-form-headline {
-        font-size: clamp(1.45rem, 7vw, 1.95rem);
-      }
-
-      .contact-form-sub {
-        font-size: 0.95rem;
-      }
-
-      .contact-form-meta {
-        margin-bottom: 0.95rem;
-      }
-
-      .contact-form-meta span {
-        font-size: 10px;
-      }
-
-      .contact-input {
-        font-size: 15px;
-        padding: 11px 12px;
-      }
-
-      .contact-textarea {
-        min-height: 100px;
-      }
-
-      footer {
-        flex-direction: column;
-        gap: 1rem;
-        padding: 2.5rem 1rem calc(1.75rem + env(safe-area-inset-bottom));
-        text-align: center;
-      }
-
-      .footer-copy {
-        order: 3;
-        font-size: 12px;
-      }
-
-      .footer-back {
-        width: 100%;
-        justify-content: center;
-      }
-
-      #mobile-menu {
-        padding: calc(76px + env(safe-area-inset-top)) 1rem calc(1rem + env(safe-area-inset-bottom));
-        gap: 0.35rem;
-      }
-
-      #mobile-menu a {
-        font-size: clamp(1.5rem, 8vw, 2rem);
-        padding: 0.85rem 0;
-      }
-
-      #back-top {
-        right: 1rem;
-        bottom: calc(1rem + env(safe-area-inset-bottom));
-        width: 38px;
-        height: 38px;
-      }
-
-      #visitor-badge {
-        bottom: calc(12px + env(safe-area-inset-bottom));
-        left: calc(12px + env(safe-area-inset-left));
-      }
-
-      body {
-        cursor: auto;
-      }
-
-      #cursor-dot,
-      #cursor-ring {
-        display: none;
-      }
-    }
-
-    @media (max-width: 480px) {
-      #navbar,
-      #navbar.scrolled {
-        padding: 0 0.85rem;
-      }
-
-      .nav-logo {
-        max-width: 150px;
-        padding-left: 0.62rem;
-      }
-
-      .nav-hamburger {
-        width: 38px;
-        height: 38px;
-        border-radius: 10px;
-      }
-
-      #theme-toggle,
-      #sound-toggle {
-        width: 32px;
-        height: 32px;
-        border-radius: 9px;
-      }
-
-      .nav-hamburger span {
-        width: 16px;
-      }
-
-      .nav-logo-title {
-        font-size: 10.8px;
-      }
-
-      .nav-logo-sub {
-        font-size: 6.7px;
-        letter-spacing: 0.14em;
-      }
-
-      .nav-logo::before {
-        height: 1.25rem;
-      }
-
-      .hero-name {
-        font-size: clamp(2.6rem, 15vw, 4rem);
-      }
-
-      .hero-stats {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-stat:last-child {
-        grid-column: auto;
-      }
-
-      .stat-num {
-        font-size: 1.9rem;
-      }
-
-      .social-btn {
-        flex-basis: 100%;
-      }
-
-      .info-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.35rem;
-      }
-
-      .info-val {
-        text-align: left;
-      }
-
-      .proj-summary {
-        padding: 1rem;
-      }
-
-      .proj-img,
-      .empty-img {
-        height: 160px;
-      }
-
-      .proj-title {
-        font-size: 1.15rem;
-      }
-
-      .timeline-item {
-        padding-left: 1.8rem;
-      }
-
-      .tl-role {
-        font-size: 1rem;
-      }
-
-      .contact-links-list {
-        gap: 6px;
-      }
-
-      .resume-block {
         padding: 1.25rem;
       }
 
       .sec-num-big {
         font-size: 4rem;
+        margin-bottom: -0.5rem;
       }
 
       .sec-title {
