@@ -1239,28 +1239,7 @@
       startAutoplay();
     })();
 
-    /* ---- Typewriter ---- */
-    const phrases = [
-      '"Production-Grade Web Apps"',
-      '"AI-Powered Tools"',
-      '"Production-Grade Mobile Apps"',
-      '"IoT Integrated Systems"',
-      '"Real Solutions to Real Problems"'
-    ];
-    let pi = 0, ci = 0, deleting = false;
-    const tw = document.getElementById('typewriter');
-    function typeStep() {
-      const phrase = phrases[pi];
-      if (!deleting) {
-        tw.textContent = phrase.slice(0, ++ci);
-        if (ci === phrase.length) { deleting = true; setTimeout(typeStep, 1800); return; }
-      } else {
-        tw.textContent = phrase.slice(0, --ci);
-        if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; }
-      }
-      setTimeout(typeStep, deleting ? 38 : 68);
-    }
-    setTimeout(typeStep, 1200);
+    /* ---- Typewriter (Removed) ---- */
 
     /* ---- Smooth anchor for nav links ---- */
     document.querySelectorAll('a[href^="#"]').forEach(a => {
