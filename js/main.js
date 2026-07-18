@@ -563,61 +563,7 @@
       });
     });
 
-    /* ---- Hackathons Toggle ---- */
-    document.querySelectorAll('.hack-summary').forEach(summary => {
-      const hackContainer = summary.closest('.tl-body');
-      const hackList = hackContainer ? hackContainer.querySelector('.hack-list') : null;
 
-      if (!hackList) return;
-
-      // Fast open/close toggle - let CSS animations handle everything
-      const syncHackSummaryState = (isExpanded) => {
-        summary.setAttribute('aria-expanded', String(isExpanded));
-
-        if (isExpanded) {
-          hackList.classList.add('open');
-          hackList.setAttribute('aria-hidden', 'false');
-        } else {
-          hackList.classList.remove('open');
-          hackList.setAttribute('aria-hidden', 'true');
-        }
-      };
-
-      syncHackSummaryState(hackList.classList.contains('open'));
-
-      const toggleHackSummary = () => {
-        const isExpanded = summary.getAttribute('aria-expanded') === 'true';
-        syncHackSummaryState(!isExpanded);
-      };
-
-      summary.addEventListener('click', () => {
-        toggleHackSummary();
-      });
-
-      summary.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          toggleHackSummary();
-        }
-      });
-    });
-
-    /* ---- Close hackathon list when clicking description ---- */
-    (function closeHackOnDescriptionClick() {
-      const hackSummaryEl = document.getElementById('hackathons-summary');
-      const hackListEl = document.getElementById('hackathon-list');
-      if (!hackSummaryEl || !hackListEl) return;
-
-      hackListEl.addEventListener('click', (e) => {
-        // Ignore clicks on links or buttons (e.g., Show Certificate)
-        if (e.target.closest('a') || e.target.closest('button')) return;
-
-        if (hackListEl.classList.contains('open')) {
-          hackListEl.classList.remove('open');
-          hackSummaryEl.setAttribute('aria-expanded', 'false');
-        }
-      });
-    })();
 
     /* ---- HSGA Carousel ---- */
     (function initHsgaCarousel() {
@@ -636,7 +582,7 @@
       let currentIndex = 0;
       let autoplayTimer = null;
       let pointerStartX = null;
-      let perView = window.innerWidth <= 768 ? 1 : (window.innerWidth <= 1150 ? 2 : 3);
+      let perView = window.innerWidth <= 768 ? 1 : 2;
       let maxIndex = Math.max(0, slides.length - perView);
       let resizeRaf = null;
       const AUTOPLAY_INTERVAL = 2800;
@@ -672,7 +618,7 @@
       };
 
       const syncLayout = () => {
-        perView = window.innerWidth <= 768 ? 1 : (window.innerWidth <= 1150 ? 2 : 3);
+        perView = window.innerWidth <= 768 ? 1 : 2;
         maxIndex = Math.max(0, slides.length - perView);
 
         slides.forEach((slide) => {
@@ -950,6 +896,161 @@
       let maxIndex = Math.max(0, slides.length - perView);
       let resizeRaf = null;
       const AUTOPLAY_INTERVAL = 2800;
+
+      const normalizeIndex = (index) => {
+        if (maxIndex === 0) return 0;
+        if (index < 0) return maxIndex;
+        if (index > maxIndex) return 0;
+        return index;
+      };
+
+      const setSlide = (index, userInitiated = false, skipAutoplayRestart = false) => {
+        currentIndex = normalizeIndex(index);
+        const offset = currentIndex * (100 / perView);
+        track.style.transform = `translateX(-${offset}%)`;
+
+        slides.forEach((slide, slideIndex) => {
+          const isVisible = slideIndex >= currentIndex && slideIndex < currentIndex + perView;
+          slide.classList.toggle('is-active', isVisible);
+          slide.setAttribute('aria-hidden', String(!isVisible));
+        });
+
+        dots.forEach((dot, dotIndex) => {
+          const isVisibleDot = dotIndex <= maxIndex;
+          const active = isVisibleDot && dotIndex === currentIndex;
+          dot.hidden = !isVisibleDot;
+          dot.disabled = !isVisibleDot;
+          dot.classList.toggle('is-active', active);
+          dot.setAttribute('aria-current', active ? 'true' : 'false');
+        });
+
+        if (userInitiated && !skipAutoplayRestart) restartAutoplay();
+      };
+
+      const syncLayout = () => {
+        perView = window.innerWidth <= 768 ? 1 : (window.innerWidth <= 1150 ? 2 : 3);
+        maxIndex = Math.max(0, slides.length - perView);
+
+        slides.forEach((slide) => {
+          slide.style.flex = `0 0 ${100 / perView}%`;
+          slide.style.minWidth = `${100 / perView}%`;
+        });
+
+        if (currentIndex > maxIndex) currentIndex = 0;
+        setSlide(currentIndex, false, true);
+      };
+
+      const goNext = (userInitiated = false) => setSlide(currentIndex + 1, userInitiated);
+      const goPrev = (userInitiated = false) => setSlide(currentIndex - 1, userInitiated);
+
+      const stopAutoplay = () => {
+        if (autoplayTimer) {
+          window.clearInterval(autoplayTimer);
+          autoplayTimer = null;
+        }
+      };
+
+      const startAutoplay = () => {
+        if (reducedMotion || autoplayTimer || maxIndex < 1) return;
+        autoplayTimer = window.setInterval(() => goNext(false), AUTOPLAY_INTERVAL);
+      };
+
+      const restartAutoplay = () => {
+        stopAutoplay();
+        startAutoplay();
+      };
+
+      prevBtn.addEventListener('click', () => goPrev(true));
+      nextBtn.addEventListener('click', () => goNext(true));
+
+      dots.forEach((dot, dotIndex) => {
+        dot.addEventListener('click', () => {
+          if (dot.hidden || dot.disabled) return;
+          setSlide(dotIndex, true);
+        });
+      });
+
+      if (window.matchMedia('(hover: hover)').matches) {
+        carousel.addEventListener('mouseenter', stopAutoplay);
+        carousel.addEventListener('mouseleave', startAutoplay);
+        carousel.addEventListener('focusin', stopAutoplay);
+        carousel.addEventListener('focusout', (event) => {
+          if (!carousel.contains(event.relatedTarget)) startAutoplay();
+        });
+      }
+
+      carousel.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          goPrev(true);
+        }
+        if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          goNext(true);
+        }
+      });
+
+      track.addEventListener('pointerdown', (event) => {
+        pointerStartX = event.clientX;
+        stopAutoplay();
+      });
+
+      track.addEventListener('pointerup', (event) => {
+        if (pointerStartX === null) return;
+        const deltaX = event.clientX - pointerStartX;
+        pointerStartX = null;
+
+        if (Math.abs(deltaX) < 40) {
+          startAutoplay();
+          return;
+        }
+        if (deltaX > 0) goPrev(true);
+        else goNext(true);
+      });
+
+      track.addEventListener('pointercancel', () => {
+        pointerStartX = null;
+        startAutoplay();
+      });
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stopAutoplay();
+        else startAutoplay();
+      });
+
+      window.addEventListener('resize', () => {
+        if (resizeRaf) window.cancelAnimationFrame(resizeRaf);
+        resizeRaf = window.requestAnimationFrame(() => {
+          resizeRaf = null;
+          syncLayout();
+        });
+      });
+
+      syncLayout();
+      startAutoplay();
+    })();
+
+    /* ---- Hackathons Carousel ---- */
+    (function initHackCarousel() {
+      const carousel = document.querySelector('.hack-carousel');
+      if (!carousel) return;
+
+      const track = carousel.querySelector('.hack-activities');
+      const slides = Array.from(carousel.querySelectorAll('.hack-slide'));
+      const dots = Array.from(carousel.querySelectorAll('.hack-dot'));
+      const prevBtn = carousel.querySelector('.hack-nav.prev');
+      const nextBtn = carousel.querySelector('.hack-nav.next');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!track || !slides.length || !prevBtn || !nextBtn) return;
+
+      let currentIndex = 0;
+      let autoplayTimer = null;
+      let pointerStartX = null;
+      let perView = window.innerWidth <= 768 ? 1 : (window.innerWidth <= 1150 ? 2 : 3);
+      let maxIndex = Math.max(0, slides.length - perView);
+      let resizeRaf = null;
+      const AUTOPLAY_INTERVAL = 3000;
 
       const normalizeIndex = (index) => {
         if (maxIndex === 0) return 0;
@@ -1417,7 +1518,7 @@
 
       const lightboxImg = document.getElementById('lightbox-img');
       const closeBtn = lightbox.querySelector('.lightbox-close');
-      const links = document.querySelectorAll('.hack-cert-media a'); // Select hackathon certificate links
+      const links = document.querySelectorAll('.hack-cert-media a, .hack-media a'); // Select hackathon certificate links
 
       const openLightbox = (imgSrc, altText) => {
         lightboxImg.src = imgSrc;
