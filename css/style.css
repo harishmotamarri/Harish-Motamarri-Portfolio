@@ -3042,6 +3042,18 @@
       height: auto;
     }
 
+    .tl-media-nptel {
+      width: min(100%, 360px);
+      aspect-ratio: 4 / 3;
+      margin-top: 0.5rem;
+      background: #0f1218;
+    }
+
+    .tl-media-nptel img {
+      height: 100%;
+      object-fit: cover;
+    }
+
     .tl-media-internship {
       width: min(100%, 360px);
       aspect-ratio: 16 / 10;
@@ -5452,6 +5464,13 @@
         border-radius: 18px;
       }
 
+      .tl-media-nptel {
+        width: 100%;
+        margin-top: 0.85rem;
+        padding: 0.35rem;
+        border-radius: 14px;
+      }
+
       .hsga-carousel, .ex-carousel {
         padding: 0 2.2rem;
       }
@@ -6308,4 +6327,3 @@
     [data-theme="light"] .toast.toast-info {
       border-left-color: #0066cc;
     }
-
