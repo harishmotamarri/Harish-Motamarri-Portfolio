@@ -1187,6 +1187,293 @@
       startAutoplay();
     })();
 
+    /* ---- NPTEL Carousel ---- */
+    (function initNptelCarousel() {
+      const carousel = document.querySelector('.nptel-carousel');
+      if (!carousel) return;
+
+      const track = carousel.querySelector('.nptel-activities, .hack-activities');
+      const slides = Array.from(carousel.querySelectorAll('.nptel-slide, .hack-slide'));
+      const dots = Array.from(carousel.querySelectorAll('.nptel-dot, .hack-dot'));
+      const prevBtn = carousel.querySelector('.nptel-nav.prev, .hack-nav.prev');
+      const nextBtn = carousel.querySelector('.nptel-nav.next, .hack-nav.next');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!track || !slides.length) return;
+
+      let currentIndex = 0;
+      let autoplayTimer = null;
+      let pointerStartX = null;
+      let perView = 1;
+      let maxIndex = Math.max(0, slides.length - perView);
+      let resizeRaf = null;
+      const AUTOPLAY_INTERVAL = 3500;
+
+      const normalizeIndex = (index) => {
+        if (maxIndex === 0) return 0;
+        if (index < 0) return maxIndex;
+        if (index > maxIndex) return 0;
+        return index;
+      };
+
+      const setSlide = (index, userInitiated = false, skipAutoplayRestart = false) => {
+        currentIndex = normalizeIndex(index);
+        if (slides.length > 1) {
+          const offset = currentIndex * (100 / perView);
+          track.style.transform = `translateX(-${offset}%)`;
+        } else {
+          track.style.transform = 'none';
+        }
+
+        slides.forEach((slide, slideIndex) => {
+          const isVisible = slides.length <= 1 || (slideIndex >= currentIndex && slideIndex < currentIndex + perView);
+          slide.classList.toggle('is-active', isVisible);
+          slide.setAttribute('aria-hidden', String(!isVisible));
+        });
+
+        dots.forEach((dot, dotIndex) => {
+          const isVisibleDot = dotIndex <= maxIndex;
+          const active = isVisibleDot && dotIndex === currentIndex;
+          dot.hidden = !isVisibleDot;
+          dot.disabled = !isVisibleDot;
+          dot.classList.toggle('is-active', active);
+          dot.setAttribute('aria-current', active ? 'true' : 'false');
+        });
+
+        if (userInitiated && !skipAutoplayRestart) restartAutoplay();
+      };
+
+      const syncLayout = () => {
+        if (slides.length > 1) {
+          perView = window.innerWidth <= 768 ? 1 : (slides.length === 2 || window.innerWidth <= 1150 ? 2 : 3);
+          maxIndex = Math.max(0, slides.length - perView);
+          slides.forEach((slide) => {
+            slide.style.flex = `0 0 ${100 / perView}%`;
+            slide.style.minWidth = `${100 / perView}%`;
+          });
+        } else {
+          perView = 1;
+          maxIndex = 0;
+          slides.forEach((slide) => {
+            slide.style.flex = '0 0 100%';
+            slide.style.minWidth = '0';
+            slide.style.maxWidth = '320px';
+          });
+        }
+
+        if (currentIndex > maxIndex) currentIndex = 0;
+        setSlide(currentIndex, false, true);
+      };
+
+      const goNext = (userInitiated = false) => {
+        if (slides.length <= 1) {
+          track.style.transform = 'translateX(-8px)';
+          window.setTimeout(() => { track.style.transform = 'none'; }, 150);
+          return;
+        }
+        setSlide(currentIndex + 1, userInitiated);
+      };
+
+      const goPrev = (userInitiated = false) => {
+        if (slides.length <= 1) {
+          track.style.transform = 'translateX(8px)';
+          window.setTimeout(() => { track.style.transform = 'none'; }, 150);
+          return;
+        }
+        setSlide(currentIndex - 1, userInitiated);
+      };
+
+      const stopAutoplay = () => {
+        if (autoplayTimer) {
+          window.clearInterval(autoplayTimer);
+          autoplayTimer = null;
+        }
+      };
+
+      const startAutoplay = () => {
+        if (reducedMotion || autoplayTimer || maxIndex < 1) return;
+        autoplayTimer = window.setInterval(() => goNext(false), AUTOPLAY_INTERVAL);
+      };
+
+      const restartAutoplay = () => {
+        stopAutoplay();
+        startAutoplay();
+      };
+
+      if (prevBtn) prevBtn.addEventListener('click', () => goPrev(true));
+      if (nextBtn) nextBtn.addEventListener('click', () => goNext(true));
+
+      dots.forEach((dot, dotIndex) => {
+        dot.addEventListener('click', () => setSlide(dotIndex, true));
+      });
+
+      track.addEventListener('pointerdown', (e) => {
+        if (slides.length <= 1) return;
+        pointerStartX = e.clientX;
+        stopAutoplay();
+      });
+
+      track.addEventListener('pointerup', (e) => {
+        if (slides.length <= 1 || pointerStartX === null) return;
+        const diff = pointerStartX - e.clientX;
+        pointerStartX = null;
+        if (Math.abs(diff) > 40) {
+          if (diff > 0) goNext(true);
+          else goPrev(true);
+        } else {
+          restartAutoplay();
+        }
+      });
+
+      track.addEventListener('pointercancel', () => {
+        pointerStartX = null;
+        restartAutoplay();
+      });
+
+      carousel.addEventListener('mouseenter', stopAutoplay);
+      carousel.addEventListener('mouseleave', startAutoplay);
+
+      window.addEventListener('resize', () => {
+        if (resizeRaf) window.cancelAnimationFrame(resizeRaf);
+        resizeRaf = window.requestAnimationFrame(() => {
+          resizeRaf = null;
+          syncLayout();
+        });
+      });
+
+      syncLayout();
+      startAutoplay();
+    })();
+
+    /* ---- Language Proficiency Carousel ---- */
+    (function initLangCarousel() {
+      const carousel = document.querySelector('.lang-carousel');
+      if (!carousel) return;
+
+      const track = carousel.querySelector('.lang-activities, .hack-activities');
+      const slides = Array.from(carousel.querySelectorAll('.lang-slide, .hack-slide'));
+      const dots = Array.from(carousel.querySelectorAll('.lang-dot, .hack-dot'));
+      const prevBtn = carousel.querySelector('.lang-nav.prev, .hack-nav.prev');
+      const nextBtn = carousel.querySelector('.lang-nav.next, .hack-nav.next');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!track || !slides.length || !prevBtn || !nextBtn) return;
+
+      let currentIndex = 0;
+      let autoplayTimer = null;
+      let pointerStartX = null;
+      let perView = window.innerWidth <= 768 ? 1 : 2;
+      let maxIndex = Math.max(0, slides.length - perView);
+      let resizeRaf = null;
+      const AUTOPLAY_INTERVAL = 3200;
+
+      const normalizeIndex = (index) => {
+        if (maxIndex === 0) return 0;
+        if (index < 0) return maxIndex;
+        if (index > maxIndex) return 0;
+        return index;
+      };
+
+      const setSlide = (index, userInitiated = false, skipAutoplayRestart = false) => {
+        currentIndex = normalizeIndex(index);
+        const offset = currentIndex * (100 / perView);
+        track.style.transform = `translateX(-${offset}%)`;
+
+        slides.forEach((slide, slideIndex) => {
+          const isVisible = slideIndex >= currentIndex && slideIndex < currentIndex + perView;
+          slide.classList.toggle('is-active', isVisible);
+          slide.setAttribute('aria-hidden', String(!isVisible));
+        });
+
+        dots.forEach((dot, dotIndex) => {
+          const isVisibleDot = dotIndex <= maxIndex;
+          const active = isVisibleDot && dotIndex === currentIndex;
+          dot.hidden = !isVisibleDot;
+          dot.disabled = !isVisibleDot;
+          dot.classList.toggle('is-active', active);
+          dot.setAttribute('aria-current', active ? 'true' : 'false');
+        });
+
+        if (userInitiated && !skipAutoplayRestart) restartAutoplay();
+      };
+
+      const syncLayout = () => {
+        perView = window.innerWidth <= 768 ? 1 : 2;
+        maxIndex = Math.max(0, slides.length - perView);
+
+        slides.forEach((slide) => {
+          slide.style.flex = `0 0 ${100 / perView}%`;
+          slide.style.minWidth = `${100 / perView}%`;
+        });
+
+        if (currentIndex > maxIndex) currentIndex = 0;
+        setSlide(currentIndex, false, true);
+      };
+
+      const goNext = (userInitiated = false) => setSlide(currentIndex + 1, userInitiated);
+      const goPrev = (userInitiated = false) => setSlide(currentIndex - 1, userInitiated);
+
+      const stopAutoplay = () => {
+        if (autoplayTimer) {
+          window.clearInterval(autoplayTimer);
+          autoplayTimer = null;
+        }
+      };
+
+      const startAutoplay = () => {
+        if (reducedMotion || autoplayTimer || maxIndex < 1) return;
+        autoplayTimer = window.setInterval(() => goNext(false), AUTOPLAY_INTERVAL);
+      };
+
+      const restartAutoplay = () => {
+        stopAutoplay();
+        startAutoplay();
+      };
+
+      prevBtn.addEventListener('click', () => goPrev(true));
+      nextBtn.addEventListener('click', () => goNext(true));
+
+      dots.forEach((dot, dotIndex) => {
+        dot.addEventListener('click', () => setSlide(dotIndex, true));
+      });
+
+      track.addEventListener('pointerdown', (e) => {
+        pointerStartX = e.clientX;
+        stopAutoplay();
+      });
+
+      track.addEventListener('pointerup', (e) => {
+        if (pointerStartX === null) return;
+        const diff = pointerStartX - e.clientX;
+        pointerStartX = null;
+        if (Math.abs(diff) > 40) {
+          if (diff > 0) goNext(true);
+          else goPrev(true);
+        } else {
+          restartAutoplay();
+        }
+      });
+
+      track.addEventListener('pointercancel', () => {
+        pointerStartX = null;
+        restartAutoplay();
+      });
+
+      carousel.addEventListener('mouseenter', stopAutoplay);
+      carousel.addEventListener('mouseleave', startAutoplay);
+
+      window.addEventListener('resize', () => {
+        if (resizeRaf) window.cancelAnimationFrame(resizeRaf);
+        resizeRaf = window.requestAnimationFrame(() => {
+          resizeRaf = null;
+          syncLayout();
+        });
+      });
+
+      syncLayout();
+      startAutoplay();
+    })();
+
     /* ---- Achievements Carousel ---- */
     (function initAchCarousel() {
       const carousel = document.querySelector('.ach-carousel');
@@ -1478,7 +1765,7 @@
 
       const lightboxImg = document.getElementById('lightbox-img');
       const closeBtn = lightbox.querySelector('.lightbox-close');
-      const links = document.querySelectorAll('.hack-cert-media a, .hack-media a'); // Select hackathon certificate links
+      const links = document.querySelectorAll('.hack-cert-media a, .hack-media a, .nptel-media a, .tl-media-nptel a, .lang-media a'); // Select certificate links
 
       const openLightbox = (imgSrc, altText) => {
         lightboxImg.src = imgSrc;

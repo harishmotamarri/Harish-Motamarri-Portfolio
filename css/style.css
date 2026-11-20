@@ -3043,15 +3043,18 @@
     }
 
     .tl-media-nptel {
-      width: min(100%, 360px);
+      width: min(100%, 320px);
       aspect-ratio: 4 / 3;
-      margin-top: 0.5rem;
+      margin: 1.15rem auto 0;
       background: #0f1218;
+      display: block;
     }
 
     .tl-media-nptel img {
+      width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
     }
 
     .tl-media-internship {
@@ -3600,6 +3603,266 @@
 
     [data-theme="light"] .hack-dot.is-active {
       background: var(--accent);
+    }
+
+    /* ===== NPTEL CAROUSEL ===== */
+    .nptel-carousel {
+      margin: 1.15rem auto 0;
+      max-width: 410px;
+      position: relative;
+      padding: 0 2.4rem;
+    }
+
+    @media (min-width: 1151px) {
+      .nptel-carousel {
+        max-width: 410px;
+      }
+    }
+
+    .nptel-viewport {
+      overflow: hidden;
+      border-radius: 18px;
+    }
+
+    .nptel-activities {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      transition: transform 0.46s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+      touch-action: pan-y;
+    }
+
+    .nptel-slide {
+      width: 100%;
+      max-width: 320px;
+      flex: 0 0 100%;
+      padding: 0 0.42rem;
+      opacity: 1;
+      transform: scale(1);
+      box-sizing: border-box;
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+
+    .nptel-card {
+      display: flex;
+      flex-direction: column;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.012) 100%),
+        linear-gradient(130deg, rgba(184, 255, 60, 0.05) 0%, rgba(184, 255, 60, 0) 55%);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.2);
+      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.32s ease, box-shadow 0.32s ease;
+      position: relative;
+      height: 100%;
+      margin: 0 auto;
+      max-width: 320px;
+      width: 100%;
+    }
+
+    .nptel-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(184, 255, 60, 0.28);
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.28);
+    }
+
+    .nptel-media {
+      margin: 0;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: #0f1218;
+      position: relative;
+      display: block;
+    }
+
+    .nptel-media a {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .nptel-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .nptel-card:hover .nptel-media img {
+      transform: scale(1.085);
+    }
+
+    .nptel-content {
+      padding: 0.85rem 0.95rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      flex-grow: 1;
+    }
+
+    .nptel-title {
+      font-family: var(--display);
+      font-size: 1.02rem;
+      line-height: 1.25;
+      color: var(--text);
+      margin: 0;
+      transition: color 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .nptel-card:hover .nptel-title {
+      color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .nptel-org {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .nptel-desc {
+      margin: 0;
+      font-size: 0.88rem;
+      line-height: 1.62;
+      color: var(--muted);
+    }
+
+    .nptel-nav {
+      position: absolute;
+      top: 42%;
+      transform: translateY(-50%);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(12, 14, 20, 0.72);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      line-height: 1;
+      cursor: none;
+      z-index: 3;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .nptel-nav:hover {
+      border-color: rgba(184, 255, 60, 0.45);
+      background: rgba(184, 255, 60, 0.16);
+      transform: translateY(-50%) scale(1.08);
+    }
+
+    .nptel-nav.prev {
+      left: 0;
+    }
+
+    .nptel-nav.next {
+      right: 0;
+    }
+
+    .nptel-dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+    }
+
+    .nptel-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      border: 0;
+      background: rgba(255, 255, 255, 0.28);
+      cursor: none;
+      transition: width 0.25s ease, background 0.25s ease, transform 0.25s ease;
+    }
+
+    .nptel-dot.is-active {
+      width: 24px;
+      background: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* Light Theme Overrides for NPTEL Carousel */
+    [data-theme="light"] .nptel-card {
+      border-color: rgba(68, 111, 22, 0.18);
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.01) 0%, rgba(0, 0, 0, 0.005) 100%),
+        linear-gradient(130deg, rgba(68, 111, 22, 0.04) 0%, rgba(68, 111, 22, 0) 55%);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.04);
+    }
+
+    [data-theme="light"] .nptel-card:hover {
+      border-color: rgba(68, 111, 22, 0.4) !important;
+      background: rgba(255, 255, 255, 0.95) !important;
+      box-shadow: 0 18px 36px rgba(68, 111, 22, 0.06) !important;
+    }
+
+    [data-theme="light"] .nptel-nav {
+      border-color: rgba(0, 0, 0, 0.12);
+      background: rgba(255, 255, 255, 0.85);
+      color: #333;
+    }
+
+    [data-theme="light"] .nptel-nav:hover {
+      border-color: rgba(68, 111, 22, 0.45);
+      background: rgba(68, 111, 22, 0.16);
+    }
+
+    [data-theme="light"] .nptel-dot {
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    [data-theme="light"] .nptel-dot.is-active {
+      background: var(--accent);
+    }
+
+    /* ===== LANGUAGE PROFICIENCY CAROUSEL ===== */
+    .lang-carousel {
+      margin: 1.15rem auto 0;
+      max-width: 720px;
+      position: relative;
+      padding: 0 2.4rem;
+    }
+
+    @media (min-width: 1151px) {
+      .lang-carousel {
+        max-width: 720px;
+      }
+    }
+
+    .lang-viewport {
+      overflow: hidden;
+      border-radius: 18px;
+    }
+
+    .lang-activities {
+      display: flex;
+      width: 100%;
+      transition: transform 0.46s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+      touch-action: pan-y;
+    }
+
+    .lang-slide {
+      min-width: 50%;
+      flex: 0 0 50%;
+      padding: 0 0.42rem;
+      opacity: 0.55;
+      transform: scale(0.985);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+      box-sizing: border-box;
+    }
+
+    .lang-slide.is-active {
+      opacity: 1;
+      transform: scale(1);
     }
 
     /* Academic Report */
@@ -5466,19 +5729,55 @@
 
       .tl-media-nptel {
         width: 100%;
-        margin-top: 0.85rem;
-        padding: 0.35rem;
+        max-width: 320px;
+        margin: 0.85rem auto 0;
+        padding: 0;
         border-radius: 14px;
+        display: block;
       }
 
-      .hsga-carousel, .ex-carousel {
+      .hsga-carousel, .ex-carousel, .nptel-carousel, .lang-carousel {
         padding: 0 2.2rem;
       }
 
-      .hsga-slide, .ex-slide {
+      .hsga-slide, .ex-slide, .nptel-slide, .lang-slide {
         min-width: 100%;
         flex: 0 0 100%;
         padding: 0;
+      }
+
+      .nptel-slide {
+        max-width: 320px;
+      }
+
+      .nptel-carousel, .lang-carousel {
+        max-width: 380px;
+      }
+
+      .nptel-nav {
+        width: 32px;
+        height: 32px;
+        top: 36%;
+      }
+
+      .nptel-nav.prev {
+        left: 0;
+      }
+
+      .nptel-nav.next {
+        right: 0;
+      }
+
+      .nptel-content {
+        padding: 0.85rem 0.95rem 1rem;
+      }
+
+      .nptel-title {
+        font-size: 1rem;
+      }
+
+      .nptel-desc {
+        font-size: 0.88rem;
       }
 
       .hsga-media {
