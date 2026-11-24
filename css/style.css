@@ -1846,6 +1846,7 @@
     #skills,
     #projects,
     #experience,
+    #certifications,
     #achievements,
     #philosophy,
     #contact {
@@ -1858,6 +1859,7 @@
     #skills::before,
     #projects::before,
     #experience::before,
+    #certifications::before,
     #achievements::before,
     #philosophy::before,
     #contact::before {
@@ -1874,6 +1876,7 @@
     #skills::after,
     #projects::after,
     #experience::after,
+    #certifications::after,
     #achievements::after,
     #philosophy::after,
     #contact::after {
@@ -1890,6 +1893,7 @@
     #skills .section-full,
     #projects .section,
     #experience .section,
+    #certifications .section,
     #achievements .section-full,
     #philosophy .section-full,
     #contact .section {
@@ -2885,8 +2889,9 @@
       color: #fff !important;
     }
 
-    /* ===== EXPERIENCE ===== */
-    #experience {
+    /* ===== EXPERIENCE & CERTIFICATIONS ===== */
+    #experience,
+    #certifications {
       border-top: 0.5px solid var(--border);
     }
 
@@ -5114,6 +5119,7 @@
     [data-theme="light"] #about,
     [data-theme="light"] #projects,
     [data-theme="light"] #experience,
+    [data-theme="light"] #certifications,
     [data-theme="light"] #contact {
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 100%);
     }
